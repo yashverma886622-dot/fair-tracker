@@ -46,12 +46,6 @@
 <main class="flex-1 p-10 max-w-6xl mx-auto">
 
     <!-- Header -->
-    <header class="mb-10">
-        <h1 class="text-3xl font-bold mb-2">
-            Welcome, 
-            <span class="bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">
-                {{ user.name }}
-            </span>
         </h1>
         <p class="text-zinc-500">
             Tracking for Team ID: {{ user.team_id }}
@@ -83,6 +77,12 @@
                 <input 
                     type="number"
                     step="0.1"
+                    name="hours"
+                    placeholder="Hrs"
+                    required
+                    class="w-24 bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-purple-500 transition"
+                >
+
                 <button class="px-6 py-2 bg-gradient-to-r from-pink-500 to-purple-600 rounded-lg text-sm font-bold text-white">
                     Log
                 </button>
