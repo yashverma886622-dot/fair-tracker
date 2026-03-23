@@ -111,8 +111,14 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-zinc-800">
-                {% for task in tasks %}
-                <tr class="hover:bg-zinc-800/40 transition">
-                    <td class="py-4 font-medium">{{ task.task_name }}</td>
-                    <td class="py-4 text-right">{{ task.hours }}</td>
-                </tr>
+        {% endif %}
+    </div>
+
+</main>
+
+<script>
+    lucide.createIcons();
+</script>
+
+</body>
+</html>
