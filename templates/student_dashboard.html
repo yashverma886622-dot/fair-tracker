@@ -105,14 +105,19 @@
         <table class="w-full text-left text-sm">
             <thead class="text-zinc-500 border-b border-zinc-800">
                 <tr>
+                    <th class="pb-3">Task Name</th>
+                    <th class="pb-3 text-right">Hours</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-zinc-800">
+                {% for task in tasks %}
+                <tr class="hover:bg-zinc-800/40 transition">
                     <td class="py-4 font-medium">{{ task.task_name }}</td>
                     <td class="py-4 text-right">{{ task.hours }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        {% else %}
-            <p class="text-zinc-500">No tasks logged yet.</p>
         {% endif %}
     </div>
 
