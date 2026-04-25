@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher Dashboard – FairTrack</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .gradient-btn {
+    background: linear-gradient(135deg, #f472b6 0%, #8b5cf6 100%);
+    transition: all 0.3s ease;
+}
+
+.gradient-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(139, 92, 246, 0.3);
+}
+    </style>
+</head>
+
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex">
+
+<!-- Sidebar -->
+<aside class="w-64 border-r border-zinc-800 p-6 flex flex-col">
+    <div class="flex items-center gap-2 mb-10">
+        <div class="w-8 h-8 bg-gradient-to-br from-pink-500 to-purple-600 rounded-lg flex items-center justify-center">
+            <i data-lucide="layers" class="w-4 h-4 text-white"></i>
+        </div>
+        <span class="font-bold text-lg">FairTrack</span>
+    </div>
+
+    <nav class="space-y-2 flex-1">
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-zinc-800">
+            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+            Dashboard
+        </a>
+    </nav>
+
+    <a href="{{ url_for('logout') }}" 
+       class="flex items-center gap-3 px-3 py-2 rounded-lg text-zinc-400 hover:text-red-400 transition mt-auto">
+        <i data-lucide="log-out" class="w-4 h-4"></i>
+        Logout
+    </a>
+</aside>
+
+<!-- Main Content -->
+<main class="flex-1 p-10 overflow-y-auto">
+
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-10">
+        <div>
+            <h1 class="text-2xl font-bold">Class Overview</h1>
+            <p class="text-zinc-500 text-sm">Manage teams & track contributions</p>
+        </div>
+
+        <div class="flex gap-3">
+
+            <!-- Create Team -->
+            <form method="POST" action="{{ url_for('create_team') }}" class="flex gap-2">
+                <input 
+                    type="text" 
+                    name="team_name"
+                    placeholder="New Team Name"
+                    required
+                    class="bg-zinc-800 border border-zinc-700 px-3 py-2 rounded-lg text-sm"
+                >
+                <button class="px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 rounded-lg text-sm font-medium">
+                    Create
+                </button>
+            </form>
+
+        </div>
+    </div>
+
+    <!-- Team Selector -->
+    <div class="mb-8">
+        <form method="GET">
+            <select name="team_id"
+                onchange="this.form.submit()"
+                class="bg-zinc-800 border border-zinc-700 px-4 py-2 rounded-lg">
+                
+                <option value="">Select Team</option>
+
+                {% for team in teams %}
+                    <option value="{{ team.id }}"
+                        {% if selected_team_id and team.id == selected_team_id|int %}selected{% endif %}>
+                        {{ team.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-3 gap-6 mb-10">
+        <div class="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl">
+            <p class="text-zinc-500 text-xs uppercase mb-2">Total Team Hours</p>
+            <h3 class="text-3xl font-bold">{{ team_total }}</h3>
+        </div>
+
+        <div class="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl">
+            <p class="text-zinc-500 text-xs uppercase mb-2">Total Students</p>
+            <h3 class="text-3xl font-bold">{{ students|length }}</h3>
+        </div>
+
+        <div class="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl">
+            <p class="text-zinc-500 text-xs uppercase mb-2">Active Contributors</p>
+            <h3 class="text-3xl font-bold">
+                {{ students | selectattr('contribution','>',0) | list | length }}
+            </h3>
+        </div>
+    </div>
+
+    <!-- Leaderboard -->
+    <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+        <h3 class="font-semibold mb-6">Team Leaderboard</h3>
+
+        {% if students %}
+        <table class="w-full text-left text-sm">
+            <thead class="text-zinc-500 border-b border-zinc-800">
+                <tr>
+                    <th class="pb-3">Rank</th>
+                    <th class="pb-3">Student</th>
+                    <th class="pb-3 text-right">Hours</th>
+                    <th class="pb-3 px-6">Contribution</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-zinc-800">
+                {% for student in students %}
+                <tr class="hover:bg-zinc-800/40 transition">
+                    <td class="py-4">#{{ loop.index }}</td>
+                    <td class="py-4 font-medium">{{ student.name }}</td>
+                    <td class="py-4 text-right">{{ student.hours }}</td>
+                    <td class="py-4 px-6">
+                        <div class="flex items-center gap-3">
+                            <div class="flex-1 h-2 bg-zinc-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-pink-500 to-purple-600"
+                                     style="width: {{ student.contribution }}%;">
+                                </div>
+                            </div>
+                            <span class="text-xs text-zinc-400">
+                                {{ student.contribution }}%
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p class="text-zinc-500">No student data available.</p>
+        {% endif %}
+    </div>
+
+</main>
+
+<script>
+    lucide.createIcons();
+</script>
+
+</body>
+</html>
